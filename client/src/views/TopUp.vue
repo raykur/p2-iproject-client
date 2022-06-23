@@ -88,7 +88,7 @@ export default {
           // alert("payment success!");
           const response = await axios({
             method: "put",
-            url: "http://localhost:3000/user/topup",
+            url: "https://gachamon-2.herokuapp.com/user/topup",
             headers: {
               access_token: localStorage.getItem("access_token"),
             },
