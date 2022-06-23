@@ -68,12 +68,36 @@
 <script>
 import { mapState, mapActions } from "pinia";
 import { useMainStore } from "../stores";
+import axios from "axios";
 export default {
   methods: {
-    ...mapActions(useMainStore, ["fetchReferralData"]),
-    clickMidTrans: function () {
+    ...mapActions(useMainStore, [
+      "fetchReferralData",
+      "fetchPaymentToken",
+      "fetchGachaCoin",
+      "topUpAdd",
+    ]),
+    clickMidTrans: async function () {
       console.log("masok");
-      window.snap.pay("TRANSACTION_TOKEN_HERE");
+      await this.fetchPaymentToken();
+      console.log(this.userToken);
+
+      window.snap.pay(this.userToken, {
+        onSuccess: async function (result) {
+          /* You may add your own implementation here */
+          // alert("payment success!");
+          const response = await axios({
+            method: "put",
+            url: "http://localhost:3000/user/topup",
+            headers: {
+              access_token: localStorage.getItem("access_token"),
+            },
+          });
+          console.log(result);
+        },
+      });
+      // this.topUpAdd();
+      this.fetchGachaCoin();
     },
     clickCopyClipboard: function () {
       // console.log("masok");
@@ -88,10 +112,13 @@ export default {
     },
   },
   computed: {
-    ...mapState(useMainStore, ["userReferralLink", "userQrCode"]),
+    ...mapState(useMainStore, ["userReferralLink", "userQrCode", "userToken"]),
   },
   created() {
     this.fetchReferralData();
+  },
+  updated() {
+    this.fetchGachaCoin;
   },
 };
 </script>

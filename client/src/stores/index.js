@@ -12,6 +12,7 @@ export const useMainStore = defineStore({
     userCoin: 0,
     userReferralLink: "",
     userQrCode: "",
+    userToken: "",
   }),
   getters: {},
   actions: {
@@ -19,7 +20,7 @@ export const useMainStore = defineStore({
       try {
         const response = await axios({
           method: "put",
-          url: "https://gachamon.herokuapp.com/user/gachaDigimon",
+          url: "http://localhost:3000/user/gachaDigimon",
           headers: {
             access_token: localStorage.getItem("access_token"),
           },
@@ -54,7 +55,7 @@ export const useMainStore = defineStore({
       try {
         const response = await axios({
           method: "post",
-          url: "https://gachamon.herokuapp.com/register",
+          url: "http://localhost:3000/register",
           data: {
             username,
             email,
@@ -79,7 +80,7 @@ export const useMainStore = defineStore({
         // console.log(email, password);
         const response = await axios({
           method: "post",
-          url: "https://gachamon.herokuapp.com/login",
+          url: "http://localhost:3000/login",
           data: {
             email,
             password,
@@ -103,7 +104,7 @@ export const useMainStore = defineStore({
       try {
         const response = await axios({
           method: "get",
-          url: "https://gachamon.herokuapp.com/user/referralCode",
+          url: "http://localhost:3000/user/referralCode",
           headers: {
             access_token: localStorage.getItem("access_token"),
           },
@@ -118,7 +119,7 @@ export const useMainStore = defineStore({
       try {
         const response = await axios({
           method: "get",
-          url: "https://gachamon.herokuapp.com/user/gachaCoin",
+          url: "http://localhost:3000/user/gachaCoin",
           headers: {
             access_token: localStorage.getItem("access_token"),
           },
@@ -132,7 +133,7 @@ export const useMainStore = defineStore({
       try {
         const response = await axios({
           method: "get",
-          url: "https://gachamon.herokuapp.com/digimonList",
+          url: "http://localhost:3000/digimonList",
         });
         // console.log(response.data.dataDigimonFresh);
         // console.log(response.data.dataDigimonRookie);
@@ -143,12 +144,41 @@ export const useMainStore = defineStore({
         console.log(err);
       }
     },
+    topUpAdd: async function () {
+      try {
+        const response = await axios({
+          method: "put",
+          url: "http://localhost:3000/user/topup",
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    fetchPaymentToken: async function () {
+      try {
+        const response = await axios({
+          method: "get",
+          url: "http://localhost:3000/user/paymentToken",
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+        });
+        console.log(response.data);
+        console.log(response.data.transactionToken);
+        this.userToken = response.data.transactionToken;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     fetchListMyDigimon: async function () {
       try {
         // console.log("masok 2");
         const response = await axios({
           method: "get",
-          url: "https://gachamon.herokuapp.com/user/myDigimon",
+          url: "http://localhost:3000/user/myDigimon",
           headers: {
             access_token: localStorage.getItem("access_token"),
           },
@@ -165,7 +195,7 @@ export const useMainStore = defineStore({
       try {
         const response = await axios({
           method: "put",
-          url: `https://gachamon.herokuapp.com/user/sellDigimon/${myDigimonId}`,
+          url: `http://localhost:3000/user/sellDigimon/${myDigimonId}`,
           headers: {
             access_token: localStorage.getItem("access_token"),
           },
